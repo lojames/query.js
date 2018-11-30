@@ -21,10 +21,6 @@ class DOMNodeCollection{
     this.html("");
   }
 
-  string_parser(string){
-    //(?<=\<.*\>).*(?=\</.*\>)
-  }
-
   append(content){
     if (this.nodes.length === 0){
       return;
@@ -33,9 +29,31 @@ class DOMNodeCollection{
     if (typeof content === 'string'){
       this.each(node => node.innerHTML += content);
     } else if (content instanceof 'HTMLElement'){
-        this.each(node => node.innerHTML += content.outerHTML)
+      this.each(node => node.innerHTML += content.outerHTML)
+    } else if (content instance of 'DOMNodeCollection'){
+      this.each(node => {
+        content.forEach( content_el => node.innerHTML += content_el.outerHTML)
+      }
+    }
+
+    attr(key, val) {
+      if (val) {
+        this.each(node => node.setAttribute(key, val));
+      } else {
+        return this.nodes[0].getAttribute(key);
+      }
+    }
+
+    addClass(newClass) {
+      this.each(node => node.classList.add(newClass));
+    }
+
+    removeClass(oldClass) {
+      this.each(node => node.classList.remove(oldClass));
     }
   }
+
+
 }
 
 module.exports = DOMNodeCollection;
