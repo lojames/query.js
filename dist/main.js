@@ -93,7 +93,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("class DOMNodeCollection{\n  constructor(nodes){\n    this.nodes = nodes;\n  }\n\n  each(callback){\n    for (let i = 0; i < this.nodes.length; i++) {\n      callback(nodes[i]);\n    }\n  }\n\n  html(string){\n    if (typeof string === \"string\"){\n      this.each(node => node.innerHTML = string);\n    } else if (this.nodes.length > 0){\n      return this.nodes[0].innerHTML;\n    }\n  }\n\n  empty(){\n    this.html(\"\");\n  }\n}\n\nmodule.exports = DOMNodeCollection;\n\n\n//# sourceURL=webpack:///./src/dom_node_collection.js?");
+eval("class DOMNodeCollection{\n  constructor(nodes){\n    this.nodes = nodes;\n  }\n\n  each(callback){\n    for (let i = 0; i < this.nodes.length; i++) {\n      callback(this.nodes[i]);\n    }\n  }\n\n  html(string){\n    if (typeof string === \"string\"){\n      this.each(node => node.innerHTML += string);\n    } else if (this.nodes.length > 0){\n      return this.nodes[0].innerHTML;\n    }\n  }\n\n  empty(){\n    this.html(\"\");\n  }\n\n  string_parser(string){\n    //(?<=\\<.*\\>).*(?=\\</.*\\>)\n  }\n\n  append(content){\n    if (this.nodes.length === 0){\n      return;\n    }\n\n    if (typeof content === 'string'){\n      this.each(node => node.innerHTML += content);\n    } else if (content instanceof 'HTMLElement'){\n        this.each(node => node.innerHTML += content.outerHTML)\n    }\n  }\n}\n\nmodule.exports = DOMNodeCollection;\n\n\n//# sourceURL=webpack:///./src/dom_node_collection.js?");
 
 /***/ }),
 
@@ -104,7 +104,7 @@ eval("class DOMNodeCollection{\n  constructor(nodes){\n    this.nodes = nodes;\n
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("const DOMNodeCollection = __webpack_require__(/*! ./dom_node_collection */ \"./src/dom_node_collection.js\");\n\nwindow.$l = (arg) => {\n  switch (typeof arg){\n    case \"string\":\n      const nodes = document.querySelectorAll(arg);\n      return new DOMNodeCollection(Array.from(nodes));\n    case \"HTMLElement\":\n      return new DOMNodeCollection([arg]);\n  }\n}\n\n\nwindow.$l = $l;\n\n\n//# sourceURL=webpack:///./src/index.js?");
+eval("const DOMNodeCollection = __webpack_require__(/*! ./dom_node_collection */ \"./src/dom_node_collection.js\");\n\nwindow.$l = (arg) => {\n  if (typeof arg === \"string\"){\n    const nodes = document.querySelectorAll(arg);\n    return new DOMNodeCollection(Array.from(nodes));\n  } else if (arg instanceof HTMLElement){\n    return new DOMNodeCollection([arg]);\n  }\n}\n\n\nwindow.$l = $l;\n\n\n//# sourceURL=webpack:///./src/index.js?");
 
 /***/ })
 
